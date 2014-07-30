@@ -1,0 +1,51 @@
+    var dataForWeixin = {
+        appId: "",
+        MsgImg: "http://1251015570.cdn.myqcloud.com/1251015570/WebPlan8/images/fximg.jpg?1",
+        TLImg: "http://1251015570.cdn.myqcloud.com/1251015570/WebPlan8/images/fximg.jpg?1",
+        url: location.href,
+        title: "全民飞机大战帮你上漫画！",
+        desc: "全民飞机大战官方漫画今日上线啦！快来参与“帮你上漫画”活动吧~",
+        fakeid: "",
+        callback: function () { }
+    };
+    (function () {
+        var onBridgeReady = function () {
+            // 发送给好友; 
+            WeixinJSBridge.on('menu:share:appmessage', function (argv) {
+                WeixinJSBridge.invoke('sendAppMessage', {
+                    "appid": dataForWeixin.appId,
+                    "img_url": dataForWeixin.MsgImg,
+                    "img_width": "120",
+                    "img_height": "120",
+                    "link": dataForWeixin.url,
+                    "desc": dataForWeixin.desc,
+                    "title": dataForWeixin.title
+                }, function (res) { _czc.push(['_trackEvent', '分享', '发送给好友', "剧本"]); (dataForWeixin.callback)(); });
+            });
+            // 分享到朋友圈;
+            WeixinJSBridge.on('menu:share:timeline', function (argv) {
+                (dataForWeixin.callback)();
+                WeixinJSBridge.invoke('shareTimeline', {
+                    "img_url": dataForWeixin.TLImg,
+                    "img_width": "120",
+                    "img_height": "120",
+                    "link": dataForWeixin.url,
+                    "desc": "全民飞机大战漫画上线啦！快来参与“帮你上漫画”活动吧~",
+                    "title": "全民飞机大战漫画上线啦！快来参与“帮你上漫画”活动吧~"
+                }, function (res) { _czc.push(['_trackEvent', '分享', '分享到朋友圈', "剧本"]); });
+            });
+            // 分享到微博;
+            WeixinJSBridge.on('menu:share:weibo', function (argv) {
+                WeixinJSBridge.invoke('shareWeibo', {
+                    "content": dataForWeixin.title,
+                    "url": dataForWeixin.url
+                }, function (res) { _czc.push(['_trackEvent', '分享', '分享到微博', "剧本"]); (dataForWeixin.callback)(); });
+            });
+        };
+        if (document.addEventListener) {
+            document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+        } else if (document.attachEvent) {
+            document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+            document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+        }
+    })();
